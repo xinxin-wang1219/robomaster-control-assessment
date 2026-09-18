@@ -23,7 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "buzzer.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -89,18 +89,7 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-  if (HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_3) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  
-  HAL_Delay(300);
-
-  if (HAL_TIM_PWM_Stop(&htim4, TIM_CHANNEL_3) != HAL_OK)
-  {
-    Error_Handler();
-  }
+ Buzzer_PlayStartup();
   /* USER CODE END 2 */
 
   /* Infinite loop */
