@@ -1,0 +1,5 @@
+build/
+mx.scratch
+.settings/
+.stm32-env-backups/
+STM32一键配置环境.exe
