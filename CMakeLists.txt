@@ -45,6 +45,7 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Bsp/Src/buzzer.c
     Bsp/Src/led.c
+    Bsp/Src/servo.c
 )
 
 # Add include paths

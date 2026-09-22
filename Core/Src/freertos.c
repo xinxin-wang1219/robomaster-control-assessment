@@ -26,6 +26,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "led.h"
+#include "servo.h"
 
 /* USER CODE END Includes */
 
@@ -54,7 +55,14 @@ static const osThreadAttr_t ledTask_attributes =
     .stack_size = 256 * 4,
     .priority = (osPriority_t) osPriorityNormal,
 };
+static osThreadId_t servoTaskHandle;
 
+static const osThreadAttr_t servoTask_attributes =
+{
+    .name = "servoTask",
+    .stack_size = 256 * 4,
+    .priority = (osPriority_t) osPriorityNormal,
+};
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -67,6 +75,7 @@ const osThreadAttr_t defaultTask_attributes = {
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
 static void LedTask(void *argument);
+static void ServoTask(void *argument);
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void *argument);
@@ -108,6 +117,13 @@ void MX_FREERTOS_Init(void) {
   ledTaskHandle = osThreadNew(LedTask, NULL, &ledTask_attributes);
 
 if (ledTaskHandle == NULL)
+{
+    Error_Handler();
+}
+servoTaskHandle = osThreadNew(ServoTask, NULL,
+                              &servoTask_attributes);
+
+if (servoTaskHandle == NULL)
 {
     Error_Handler();
 }
@@ -161,6 +177,30 @@ static void LedTask(void *argument)
                 Led_Set(colors[i], (uint16_t)level);
                 osDelay(10);
             }
+        }
+    }
+}
+static void ServoTask(void *argument)
+{
+    const uint8_t angles[] = {0U, 45U, 90U, 135U, 180U};
+    (void)argument;
+
+    Servo_Start();
+
+    for (;;)
+    {
+        /* 从0°逐步转到180° */
+        for (uint32_t i = 0U; i < 5U; i++)
+        {
+            Servo_SetAngle(angles[i]);
+            osDelay(1000U);
+        }
+
+        /* 再从135°逐步返回0°，方便循环演示 */
+        for (int32_t i = 3; i >= 0; i--)
+        {
+            Servo_SetAngle(angles[i]);
+            osDelay(1000U);
         }
     }
 }
